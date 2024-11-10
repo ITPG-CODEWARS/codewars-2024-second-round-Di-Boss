@@ -53,9 +53,13 @@ def index():
         if generate_qr:
             full_short_url = request.host_url + short_code
             qr = qrcode.make(full_short_url)
-            qr_code_path = os.path.join('static', 'qr_codes', f'{short_code}.png')
+            # Use a relative path within static folder
+            qr_code_path = f'static/qr_codes/{short_code}.png'
             os.makedirs(os.path.dirname(qr_code_path), exist_ok=True)
             qr.save(qr_code_path)
+
+            # Pass only the path relative to `static`
+            qr_code_path = f'qr_codes/{short_code}.png'
 
         # Redirect to the page that shows the shortened link (and optionally the QR code)
         return redirect(url_for('shortened_link', short_code=short_code, qr=qr_code_path))
