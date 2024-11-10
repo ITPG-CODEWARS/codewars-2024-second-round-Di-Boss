@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Shortener</title>
+    
+    <!-- Линк към шрифта Roboto от Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Линк към иконата на сайта (favicon) -->
+    <link rel="icon" href="/static/favicon-32x32.png" type="image/x-icon">
+
+    <!-- Връзка към CSS файла със стилизацията -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <!-- Основен контейнер за съдържанието на сайта за скъсяване на линкове -->
+    <div class="container">
+        
+        <!-- Лого на сайта -->
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Link Shorten Logo" class="logo-image">
+        </div>
+
+        <!-- Показване на съобщения за обратна връзка (напр. успех или грешка) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <p class="{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Формуляр за въвеждане на линк и опционален суфикс -->
+        <form method="POST" action="/">
+            
+            <!-- Поле за въвеждане на линк -->
+            <label for="link">Enter the Link</label>
+            <input type="text" id="link" name="link" placeholder="Enter URL to shorten" required>
+
+            <!-- Поле за опционален текст след подчертавката (custom suffix) -->
+            <label for="custom_suffix">Custom Suffix (optional)</label>
+            <input type="text" id="custom_suffix" name="custom_suffix" placeholder="Enter custom text after the underscore">
+
+            <!-- Чекбокс за генериране на QR код -->
+            <div class="checkbox-group">
+                <input type="checkbox" id="generate_qr" name="generate_qr">
+                <label for="generate_qr">Generate QR Code</label>
+            </div>
+
+            <!-- Бутон за скъсяване на линка, разположен под полетата за въвеждане -->
+            <button type="submit" class="shorten-button">Shorten</button>
+        </form>
+    </div>
+
+    <!-- Секция за футъра на сайта -->
+    <footer>
+        All rights reserved &copy; Link Shortener
+    </footer>
+
+</body>
+</html>

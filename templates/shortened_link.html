@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Shortened Link</title>
+    
+    <!-- Линк към шрифта Roboto от Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+        <!-- Линк към иконата на сайта (favicon) -->
+        <link rel="icon" href="/static/favicon-32x32.png" type="image/x-icon">
+    <!-- Връзка към CSS файла със стилизацията -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <!-- Основен контейнер за показване на скъсения линк -->
+    <div class="container link-container">
+        
+        <!-- Заглавие, което показва, че линкът е готов -->
+        <h2>Your shortened link is ready!</h2>
+        
+        <!-- Показване на скъсения линк като кликваем линк, който се отваря в нов прозорец -->
+        <p>
+            <a href="{{ full_short_url }}" target="_blank">{{ full_short_url }}</a>
+        </p>
+
+        <!-- Показване на QR кода, ако е генериран -->
+        {% if qr_code_path %}
+            <div class="qr-code">
+                <h3>QR Code:</h3>
+                
+                <!-- Изображение на QR кода с линк към скъсения URL -->
+                <img src="{{ url_for('static', filename=qr_code_path.replace('static/', '')) }}" alt="QR Code for shortened link">
+            </div>
+        {% endif %}
+
+        <!-- Бутон за създаване на нов скъсен линк, който води обратно към началната страница -->
+        <button onclick="window.location.href='/'" class="shorten-button">Create Another</button>
+    </div>
+
+</body>
+</html>
