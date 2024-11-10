@@ -1,0 +1,166 @@
+/* Importing Roboto font and setting it as default */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Centering the container */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Main container for content */
+.container {
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    background-color: white;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo container styling */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1em;
+}
+
+.logo-image {
+    max-width: 150px; /* Adjust size as needed */
+}
+
+/* Labels for input fields */
+label {
+    display: block;
+    margin: 1em 0 0.5em;
+    font-weight: 400;
+    font-size: 1em;
+    color: #555;
+}
+
+/* Styling for input fields */
+input[type="text"] {
+    width: 100%;
+    padding: 0.8em;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 1em;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #ff8c00;
+}
+
+/* Single Button styling */
+button.shorten-button {
+    width: 100%;
+    padding: 0.8em;
+    font-size: 1em;
+    background-color: #ff8c00;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: 500;
+    margin-top: 1em;
+}
+
+button.shorten-button:hover {
+    background-color: #e67e00;
+}
+
+/* Footer styling */
+footer {
+    margin-top: 2em;
+    font-size: 0.9em;
+    color: #999;
+    font-weight: 300;
+}
+
+/* Link container for displaying the shortened link */
+.link-container {
+    text-align: center;
+    margin-top: 20%;
+}
+
+.link-container h2 {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 1em;
+}
+
+.link-container p {
+    font-size: 1.2em;
+    margin-bottom: 1.5em;
+}
+
+.link-container a {
+    color: #ff8c00;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.link-container a:hover {
+    text-decoration: underline;
+}
+
+.link-container .shorten-button {
+    width: auto;
+    padding: 0.8em 1.5em;
+    font-size: 1em;
+    background-color: #ff8c00;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.link-container .shorten-button:hover {
+    background-color: #e67e00;
+}
+
+/* Checkbox styling */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin: 1em 0;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 0.5em;
+}
+
+/* QR code display */
+.qr-code {
+    margin-top: 1.5em;
+    text-align: center;
+}
+
+.qr-code h3 {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 0.5em;
+}
+
+.qr-code img {
+    max-width: 200px;
+    height: auto;
+    border: 1px solid #ddd;
+    padding: 0.5em;
+    border-radius: 4px;
+}
