@@ -12,72 +12,73 @@ app.config['SECRET_KEY'] = 'your_secret_key'
 
 db = SQLAlchemy(app)
 
-# Модел за базата данни за съхраняване на линкове
+# Database model for URLs
 class URL(db.Model):
-    id = db.Column(db.Integer, primary_key=True)  # Уникален идентификатор за всеки запис
-    original_url = db.Column(db.String(500), nullable=False)  # Оригиналният URL, който ще се скъсява
-    short_code = db.Column(db.String(10), unique=True, nullable=False)  # Уникален код за скъсения линк
+    id = db.Column(db.Integer, primary_key=True)
+    original_url = db.Column(db.String(500), nullable=False)
+    short_code = db.Column(db.String(10), unique=True, nullable=False)
 
-# Функция за генериране на случаен кратък код
+# Generate a random short code
 def generate_short_code(length=6):
-    characters = string.ascii_letters + string.digits  # Възможни символи за кода (букви и цифри)
+    characters = string.ascii_letters + string.digits
     while True:
-        short_code = ''.join(random.choices(characters, k=length))  # Генериране на случаен код с дължина 6 символа
-        if not URL.query.filter_by(short_code=short_code).first():  # Проверка дали кодът вече не съществува
+        short_code = ''.join(random.choices(characters, k=length))
+        if not URL.query.filter_by(short_code=short_code).first():
             return short_code
 
-# Главен маршрут за началната страница
+# Home route
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        original_url = request.form.get('link')  # Получаване на оригиналния линк от формуляра
-        custom_suffix = request.form.get('custom_suffix')  # Получаване на потребителски суфикс, ако е добавен
-        generate_qr = 'generate_qr' in request.form  # Проверка дали чекбоксът за QR код е отметнат
+        original_url = request.form.get('link')
+        custom_suffix = request.form.get('custom_suffix')
+        generate_qr = 'generate_qr' in request.form  # Check if QR checkbox is ticked
 
-        # Проверка дали е добавен персонализиран суфикс
+        # Check if a custom suffix is provided
         if custom_suffix:
-            if URL.query.filter_by(short_code=custom_suffix).first():  # Ако суфиксът вече съществува
+            if URL.query.filter_by(short_code=custom_suffix).first():
                 flash('Custom suffix is already taken. Please choose another one.', 'danger')
                 return redirect(url_for('index'))
-            short_code = custom_suffix  # Използване на персонализирания суфикс като кратък код
+            short_code = custom_suffix
         else:
-            short_code = generate_short_code()  # Генериране на случаен кратък код, ако няма персонализиран
-
-        # Записване на оригиналния линк и краткия код в базата данни
+            short_code = generate_short_code()
+        
+        # Save the URL and short code to the database
         new_url = URL(original_url=original_url, short_code=short_code)
         db.session.add(new_url)
         db.session.commit()
 
-        # Генериране на QR код, ако е поискано
+        # Generate QR code if requested
         qr_code_path = None
         if generate_qr:
-            full_short_url = request.host_url + short_code  # Пълен скъсен URL
-            qr = qrcode.make(full_short_url)  # Създаване на QR код за скъсения линк
-            qr_code_path = f'static/qr_codes/{short_code}.png'  # Път до файла с QR кода
-            os.makedirs(os.path.dirname(qr_code_path), exist_ok=True)  # Създаване на папката, ако не съществува
-            qr.save(qr_code_path)  # Записване на QR кода като изображение
+            full_short_url = request.host_url + short_code
+            qr = qrcode.make(full_short_url)
+            qr_code_path = os.path.join('static', 'qr_codes', f'{short_code}.png')
+            os.makedirs(os.path.dirname(qr_code_path), exist_ok=True)
+            qr.save(qr_code_path)
 
-        # Пренасочване към страницата, която показва скъсения линк (и QR кода, ако е наличен)
+        # Redirect to the page that shows the shortened link (and optionally the QR code)
         return redirect(url_for('shortened_link', short_code=short_code, qr=qr_code_path))
-
+    
     return render_template('index.html')
 
-# Маршрут за показване на скъсения линк и QR код (ако е генериран)
+# Display the shortened link and QR code (if generated)
 @app.route('/link/<short_code>')
 def shortened_link(short_code):
-    full_short_url = request.host_url + short_code  # Пълен URL за скъсения линк
-    qr_code_path = request.args.get('qr')  # Път до QR кода, ако е генериран
+    full_short_url = request.host_url + short_code
+    qr_code_path = request.args.get('qr')
     return render_template('shortened_link.html', full_short_url=full_short_url, qr_code_path=qr_code_path)
 
-# Маршрут за пренасочване към оригиналния URL
+# Redirect to the original URL
 @app.route('/<short_code>')
 def redirect_to_url(short_code):
-    url = URL.query.filter_by(short_code=short_code).first_or_404()  # Намиране на оригиналния URL по кратък код
-    return redirect(url.original_url)  # Пренасочване към оригиналния URL
+    url = URL.query.filter_by(short_code=short_code).first_or_404()
+    return redirect(url.original_url)
 
-# Инициализиране на базата данни
+# Initialize the database
 with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
-    app.run(debug=True)  # Стартиране на приложението с включен режим за отстраняване на грешки
+    app.run(debug=True)  # Start the application with debug mode on
+
